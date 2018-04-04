@@ -37,6 +37,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        fm = getSupportFragmentManager();
+        bandFragment = fm.findFragmentById(R.id.bandFragment);
+        channelsFragment = fm.findFragmentById(R.id.channelsFragment);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar supportActionBar = getSupportActionBar();
@@ -45,9 +50,7 @@ public class MainActivity extends AppCompatActivity {
         final String[] toolbarSpinnerItemNames = getResources().getStringArray(R.array.toolbarSpinnerItemNames);
 
 
-        fm = getSupportFragmentManager();
-        bandFragment = fm.findFragmentById(R.id.bandFragment);
-        channelsFragment = fm.findFragmentById(R.id.channelsFragment);
+
 
         Spinner spinner = toolbar.findViewById(R.id.toolbarSpinner);
         SpinnerAdapter spinnerAdapter = new ArrayAdapter<String>(this, R.layout.simple_spinner_item_view, toolbarSpinnerItemNames);
@@ -87,21 +90,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        App.getApi().getData("http://lenta.ru/rss").enqueue(new Callback<Article>() {
-            @Override
-            public void onResponse(Call<Article> call, Response<Article> response) {
-                Log.w("Ez",response.body().toString());
 
-
-            }
-
-            @Override
-            public void onFailure(Call<Article> call, Throwable t) {
-
-                Toast.makeText(MainActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
-                t.printStackTrace();
-            }
-        });
 
     }
 

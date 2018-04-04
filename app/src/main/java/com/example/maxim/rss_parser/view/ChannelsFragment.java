@@ -37,7 +37,7 @@ public class ChannelsFragment extends Fragment {
         cards.add(new Card("hello4", "descr4"));
         cards.add(new Card("hello5", "descr5"));
         cards.add(new Card("hello6", "descr6"));
-        recyclerView.setAdapter(new RecyclerAdapter(cards));
+     //   recyclerView.setAdapter(new RecyclerAdapter(cards));
 
         return v;
     }

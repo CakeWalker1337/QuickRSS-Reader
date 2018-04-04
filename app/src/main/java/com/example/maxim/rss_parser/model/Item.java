@@ -6,6 +6,7 @@ import org.simpleframework.xml.Root;
 @Root(name = "item", strict = false)
 public class Item
 {
+    private String channelName;
 
     @Element(name = "guid")
     private String guid;
@@ -19,7 +20,7 @@ public class Item
     @Element(name = "category")
     private String category;
 
-    @Element(name = "enclosure")
+    @Element(name = "enclosure", required = false)
     private Enclosure enclosure;
 
     @Element(name = "description")
@@ -28,6 +29,16 @@ public class Item
     @Element(name = "link")
     private String link;
 
+
+    public String getChannelName ()
+    {
+        return channelName;
+    }
+
+    public void setChannelName (String channelName)
+    {
+        this.channelName = channelName;
+    }
 
     public String getGuid ()
     {

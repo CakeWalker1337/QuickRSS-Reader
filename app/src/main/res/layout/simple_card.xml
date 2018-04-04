@@ -1,28 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:background="#EEEEEE"
     android:layout_margin="5pt"
     android:layout_height="wrap_content"
     android:elevation="10px"
+    android:padding="10dp"
     android:orientation="vertical">
 
-
     <TextView
-        android:id="@+id/helloBox"
+        android:id="@+id/channelNameBox"
+        android:textStyle="bold"
+        android:textSize="10pt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="ad" />
 
-        android:text="Hello: " />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@android:color/black" />
+
+    <TextView
+        android:id="@+id/titleBox"
+        android:layout_marginBottom="10dp"
+        android:textSize="9pt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Title" />
 
     <TextView
         android:id="@+id/contentBox"
+        android:layout_marginBottom="10dp"
         android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:text="Content: " />
+        android:layout_height="wrap_content"
+        android:text="Content" />
 
-
-
+    <TextView
+        android:id="@+id/dateBox"
+        android:textSize="6pt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="viewEnd"
+        android:text="time" />
 </LinearLayout>

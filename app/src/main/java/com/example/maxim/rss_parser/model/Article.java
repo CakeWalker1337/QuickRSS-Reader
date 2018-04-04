@@ -19,6 +19,15 @@ public class Article {
         this.channel = channel;
     }
 
+    public void refreshData(Article newArticle)
+    {
+        getChannel().clearItems();
+        for(int newItemIndex = 0; newItemIndex<newArticle.getChannel().getItemsSize(); newItemIndex++)
+        {
+            getChannel().addItem(newArticle.getChannel().getItem(newItemIndex));
+        }
+    }
+
     @Override
     public String toString()
     {

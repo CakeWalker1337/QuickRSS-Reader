@@ -7,7 +7,7 @@ import org.simpleframework.xml.Root;
 @Root(name = "enclosure", strict = false)
 public class Enclosure
 {
-    @Attribute(name = "length")
+    @Attribute(name = "length", required = false)
     private String length;
 
     @Attribute(name = "type")

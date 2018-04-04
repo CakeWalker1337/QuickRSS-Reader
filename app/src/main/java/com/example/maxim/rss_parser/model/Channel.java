@@ -19,7 +19,7 @@ public class Channel {
     private String description;
 
     @Path("link")
-    @Text(required=false)
+    @Text(required = false)
     private String link;
 
     @ElementList(name = "item", inline = true)
@@ -32,70 +32,65 @@ public class Channel {
     private String language;
 
 
-    public String getTitle ()
-    {
+    public String getTitle() {
         return title;
     }
 
-    public void setTitle (String title)
-    {
+    public void setTitle(String title) {
         this.title = title;
     }
 
-    public String getDescription ()
-    {
+    public String getDescription() {
         return description;
     }
 
-    public void setDescription (String description)
-    {
+    public void setDescription(String description) {
         this.description = description;
     }
 
-    public String getLink ()
-    {
+    public String getLink() {
         return link;
     }
 
-    public void setLink (String link)
-    {
+    public void setLink(String link) {
         this.link = link;
     }
 
-    public Item getItem (int index)
-    {
+    public Item getItem(int index) {
         return items.get(index);
     }
 
-    public void addItem (Item item)
-    {
+    public void addItem(Item item) {
         items.add(item);
     }
 
-    public Image getImage ()
-    {
+    public void clearItems() {
+        items.clear();
+    }
+
+    public int getItemsSize() { return items.size(); }
+
+
+
+    public Image getImage() {
         return image;
     }
 
-    public void setImage (Image image)
-    {
+    public void setImage(Image image) {
         this.image = image;
     }
 
-    public String getLanguage ()
-    {
+    public String getLanguage() {
         return language;
     }
 
-    public void setLanguage (String language)
-    {
+    public void setLanguage(String language) {
         this.language = language;
     }
 
     @Override
-    public String toString()
-    {
-        return "ClassPojo [title = "+title+", description = "+description+", link = "+link+", item = "+items.size()+", image = "+image+", language = "+language+"]";
+    public String toString() {
+        return "ClassPojo [title = " + title + ", description = " + description + ", link = " + link + ", item = " + items.size() + ", image = " + image + ", language = " + language + "]";
     }
 
 }
