@@ -2,4 +2,6 @@
     <string name="app_name">RSS_Parser</string>
     <string name="action_settings">Settings</string>
     <string name="connectionLostMessage">Отсутствует соединение с интернетом. Восстановите интернет-соединение и обновите страницу.</string>
+    <string name="linkBoxText">Источник:</string>
+    <string name="selectChannelQuery">SELECT * FROM `rssChannels`;</string>
 </resources>

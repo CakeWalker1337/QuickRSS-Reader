@@ -12,10 +12,12 @@ import java.util.List;
 @Root(name = "channel", strict = false)
 public class Channel {
 
-    @Element(name = "title")
+    private int id;
+
+    @Element(name = "title", required = false)
     private String title;
 
-    @Element(name = "description")
+    @Element(name = "description", required = false)
     private String description;
 
     @Path("link")
@@ -25,12 +27,19 @@ public class Channel {
     @ElementList(name = "item", inline = true)
     private List<Item> items;
 
-    @Element(name = "image")
+    @Element(name = "image", required = false)
     private Image image;
 
-    @Element(name = "language")
+    @Element(name = "language", required = false)
     private String language;
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getTitle() {
         return title;
@@ -70,7 +79,14 @@ public class Channel {
 
     public int getItemsSize() { return items.size(); }
 
-
+    public void refreshData(Article newArticle)
+    {
+        clearItems();
+        for(int newItemIndex = 0; newItemIndex<newArticle.getChannel().getItemsSize(); newItemIndex++)
+        {
+            addItem(newArticle.getChannel().getItem(newItemIndex));
+        }
+    }
 
     public Image getImage() {
         return image;

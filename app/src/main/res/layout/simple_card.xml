@@ -32,12 +32,24 @@
         android:layout_height="wrap_content"
         android:text="Title" />
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageBox"/>
+
     <TextView
-        android:id="@+id/contentBox"
+    android:id="@+id/contentBox"
+    android:layout_marginBottom="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Content" />
+
+    <TextView
+        android:id="@+id/linkBox"
         android:layout_marginBottom="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Content" />
+        android:text="Link" />
 
     <TextView
         android:id="@+id/dateBox"

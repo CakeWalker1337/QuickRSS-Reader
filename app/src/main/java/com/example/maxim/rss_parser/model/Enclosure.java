@@ -8,22 +8,22 @@ import org.simpleframework.xml.Root;
 public class Enclosure
 {
     @Attribute(name = "length", required = false)
-    private String length;
+    private String lengthg;
 
-    @Attribute(name = "type")
+    @Attribute(name = "type", required = false)
     private String type;
 
-    @Attribute(name = "url")
+    @Attribute(name = "url", required = false)
     private String url;
 
     public String getLength ()
     {
-        return length;
+        return lengthg;
     }
 
-    public void setLength (String length)
+    public void setLength (String lengthg)
     {
-        this.length = length;
+        this.lengthg = lengthg;
     }
 
     public String getType ()
@@ -49,6 +49,6 @@ public class Enclosure
     @Override
     public String toString()
     {
-        return "ClassPojo [length = "+length+", type = "+type+", url = "+url+"]";
+        return "ClassPojo [length = "+lengthg+", type = "+type+", url = "+url+"]";
     }
 }

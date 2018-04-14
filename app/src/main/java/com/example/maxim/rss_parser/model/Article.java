@@ -1,5 +1,6 @@
 package com.example.maxim.rss_parser.model;
 
+import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
@@ -8,6 +9,10 @@ public class Article {
 
     @Element(name = "channel")
     private Channel channel;
+
+    @Attribute(name = "version")
+    private String version;
+
 
     public Channel getChannel ()
     {
@@ -19,13 +24,14 @@ public class Article {
         this.channel = channel;
     }
 
-    public void refreshData(Article newArticle)
+    public String getVersion ()
     {
-        getChannel().clearItems();
-        for(int newItemIndex = 0; newItemIndex<newArticle.getChannel().getItemsSize(); newItemIndex++)
-        {
-            getChannel().addItem(newArticle.getChannel().getItem(newItemIndex));
-        }
+        return version;
+    }
+
+    public void setVersion (String version)
+    {
+        this.version = version;
     }
 
     @Override

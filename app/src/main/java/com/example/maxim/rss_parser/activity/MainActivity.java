@@ -17,9 +17,12 @@ import android.widget.Toast;
 
 import com.example.maxim.rss_parser.R;
 import com.example.maxim.rss_parser.data.App;
+import com.example.maxim.rss_parser.database.DatabaseHelper;
 import com.example.maxim.rss_parser.model.Article;
 import com.example.maxim.rss_parser.model.Channel;
+import com.example.maxim.rss_parser.model.Item;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.ResponseBody;
@@ -32,11 +35,17 @@ public class MainActivity extends AppCompatActivity {
     private FragmentManager fm;
     private Fragment bandFragment;
     private Fragment channelsFragment;
+    public int Index;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        DatabaseHelper.openDB(getApplicationContext());
+
+        Object obj = getArrayOrObj();
+
 
         fm = getSupportFragmentManager();
         bandFragment = fm.findFragmentById(R.id.bandFragment);
@@ -48,8 +57,6 @@ public class MainActivity extends AppCompatActivity {
         supportActionBar.setDisplayShowTitleEnabled(false);
 
         final String[] toolbarSpinnerItemNames = getResources().getStringArray(R.array.toolbarSpinnerItemNames);
-
-
 
 
         Spinner spinner = toolbar.findViewById(R.id.toolbarSpinner);
@@ -82,7 +89,6 @@ public class MainActivity extends AppCompatActivity {
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setVisibility(View.INVISIBLE);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -91,8 +97,12 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
     }
-
+    private Object getArrayOrObj()
+    {
+        ArrayList<Item> ar = new ArrayList<>();
+        ar.add(new Item());
+        return ar;
+    }
 
 }

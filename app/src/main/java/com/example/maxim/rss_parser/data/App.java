@@ -20,7 +20,7 @@ public class App extends Application {
         super.onCreate();
 
         retrofit = new Retrofit.Builder()
-                .baseUrl("http://lenta.ru")
+                .baseUrl("http://www")
                 .addConverterFactory(SimpleXmlConverterFactory.create())
                 .build();
         rssApi = retrofit.create(RssApi.class);

@@ -1,23 +1,30 @@
 package com.example.maxim.rss_parser.view;
 
-
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.maxim.rss_parser.model.Article;
-import com.example.maxim.rss_parser.model.Card;
+
 import com.example.maxim.rss_parser.R;
 import com.example.maxim.rss_parser.model.Item;
+import com.squareup.picasso.Picasso;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    private final long FADE_DURATION = 300;
+    private InputStream is;
     private ArrayList<Item> items;
+    private int width;
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -26,24 +33,34 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return vh;
     }
 
-    public RecyclerAdapter(ArrayList<Item> items) {
-
+    public RecyclerAdapter(ArrayList<Item> items, int width) {
         this.items = items;
+        this.width = width;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if(items == null) return;
-        ViewHolder vHolder = (ViewHolder) holder;
-        vHolder.channelNameBox.setText(items.get(position).getChannelName());
-        vHolder.titleBox.setText(items.get(position).getTitle());
-        vHolder.contentBox.setText(items.get(position).getDescription());
-        vHolder.dateBox.setText(items.get(position).getPubDate());
+        if (items == null) return;
+        final ViewHolder vHolder = (ViewHolder) holder;
+        Item item = items.get(position);
+        vHolder.channelNameBox.setText(item.getChannel().getTitle());
+        vHolder.titleBox.setText(item.getTitle());
+        vHolder.contentBox.setText(item.getDescription());
+        vHolder.linkBox.setText(Html.fromHtml("Источник: <a href = \"" + item.getLink() + "\"> " + item.getLink() + "  </a>"));
+        vHolder.dateBox.setText(item.getPubDate());
+
+        if (item.getEnclosure() == null)
+            Log.w("Enclosure", "NULL");
+        else {
+            Picasso.get().load(item.getEnclosure().getUrl()).resize(width, 0).into(vHolder.imageBox);
+        }
+
+        setFadeAnimation(holder.itemView);
     }
 
     @Override
     public int getItemCount() {
-        if(items == null) return 0;
+        if (items == null) return 0;
         return items.size();
     }
 
@@ -52,6 +69,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         public TextView titleBox;
         public TextView contentBox;
         public TextView dateBox;
+        public TextView linkBox;
+        public ImageView imageBox;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -59,6 +78,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             titleBox = itemView.findViewById(R.id.titleBox);
             contentBox = itemView.findViewById(R.id.contentBox);
             dateBox = itemView.findViewById(R.id.dateBox);
+            linkBox = itemView.findViewById(R.id.linkBox);
+            linkBox.setMovementMethod(LinkMovementMethod.getInstance());
+            imageBox = itemView.findViewById(R.id.imageBox);
         }
     }
 
@@ -66,5 +88,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
     }
+
+    private void setFadeAnimation(View vh) {
+        AlphaAnimation alphaAnimation = new AlphaAnimation(0f, 1f);
+        alphaAnimation.setDuration(FADE_DURATION);
+        vh.startAnimation(alphaAnimation);
+    }
+
 
 }

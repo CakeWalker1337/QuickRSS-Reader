@@ -7,19 +7,19 @@ import org.simpleframework.xml.Root;
 public class Image
 {
 
-    @Element(name = "title")
+    @Element(name = "title", required = false)
     private String title;
 
-    @Element(name = "height")
+    @Element(name = "height", required = false)
     private String height;
 
-    @Element(name = "link")
+    @Element(name = "link", required = false)
     private String link;
 
-    @Element(name = "width")
+    @Element(name = "width", required = false)
     private String width;
 
-    @Element(name = "url")
+    @Element(name = "url", required = false)
     private String url;
 
     public String getTitle ()
