@@ -19,7 +19,7 @@ import com.squareup.picasso.Picasso;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class BandRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final long FADE_DURATION = 300;
     private InputStream is;
@@ -33,7 +33,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return vh;
     }
 
-    public RecyclerAdapter(ArrayList<Item> items, int width) {
+    public BandRecyclerAdapter(ArrayList<Item> items, int width) {
         this.items = items;
         this.width = width;
     }

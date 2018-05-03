@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.example.maxim.rss_parser.R;
 import com.example.maxim.rss_parser.database.DatabaseHelper;
+import com.example.maxim.rss_parser.model.Channel;
 
 import java.util.ArrayList;
 
@@ -18,9 +19,9 @@ import java.util.ArrayList;
 
 public class ChannelsFragment extends Fragment {
 
+    private ArrayList<Channel> channels;
     public ChannelsFragment()
     {
-
     }
 
     @Override
@@ -30,11 +31,11 @@ public class ChannelsFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_channels, container, false);
 
         RecyclerView recyclerView = v.findViewById(R.id.recyclerChannels);
-        //DatabaseHelper.pushQueryForResult("SELECT * FROM `rssChannels`;");
+        channels = DatabaseHelper.selectAllChannels();
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-     //   recyclerView.setAdapter(new RecyclerAdapter(cards));
+        recyclerView.setAdapter(new ChannelRecyclerAdapter(channels));
 
         return v;
     }

@@ -3,5 +3,6 @@
     <string name="action_settings">Settings</string>
     <string name="connectionLostMessage">Отсутствует соединение с интернетом. Восстановите интернет-соединение и обновите страницу.</string>
     <string name="linkBoxText">Источник:</string>
-    <string name="selectChannelQuery">SELECT * FROM `rssChannels`;</string>
+    <string name="insertItemError">Ошибка сохранения данных в базу данных!</string>
+    <string name="insertChannelError">Ошибка сохранения данных в базу данных!</string>
 </resources>

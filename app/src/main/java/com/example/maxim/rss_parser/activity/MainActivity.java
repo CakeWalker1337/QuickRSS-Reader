@@ -35,16 +35,16 @@ public class MainActivity extends AppCompatActivity {
     private FragmentManager fm;
     private Fragment bandFragment;
     private Fragment channelsFragment;
-    public int Index;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        DatabaseHelper.openDB(getApplicationContext());
+        DatabaseHelper.createTables();
         setContentView(R.layout.activity_main);
 
-        DatabaseHelper.openDB(getApplicationContext());
 
-        Object obj = getArrayOrObj();
+
 
 
         fm = getSupportFragmentManager();
@@ -97,12 +97,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-    }
-    private Object getArrayOrObj()
-    {
-        ArrayList<Item> ar = new ArrayList<>();
-        ar.add(new Item());
-        return ar;
     }
 
 }

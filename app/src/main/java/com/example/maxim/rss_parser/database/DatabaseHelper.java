@@ -1,10 +1,14 @@
 package com.example.maxim.rss_parser.database;
 
+import android.annotation.SuppressLint;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.provider.ContactsContract;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.maxim.rss_parser.R;
@@ -17,11 +21,25 @@ import java.util.ArrayList;
 public class DatabaseHelper {
 
     public static final String DB_NAME = "rssParser";
+    public static final String ITEMS_TABLE_NAME = "rssItems";
+    public static final String CHANNELS_TABLE_NAME = "rssChannels";
+    public static final String TITLE_COLUMN = "title";
+    public static final String ID_COLUMN = "id";
+    public static final String DESCRIPTION_COLUMN = "description";
+    public static final String LINK_COLUMN = "link";
+    public static final String CHANNEL_ID_COLUMN = "channelId";
+    public static final String PUB_DATE_COLUMN = "pubDate";
+    public static final String END_OF_QUERY = ";";
+    public static final String SELECT_ALL_FROM = "SELECT * FROM ";
+
 
     private static SQLiteDatabase database;
+
+    @SuppressLint("StaticFieldLeak")
     private static Context currentContext;
 
     public static void openDB(Context context) {
+        currentContext = context;
         try {
             database = context.openOrCreateDatabase(DB_NAME, Context.MODE_PRIVATE, null);
         } catch (SQLiteException e) {
@@ -29,18 +47,29 @@ public class DatabaseHelper {
         }
     }
 
-    public void createTables()
-    {
-        DatabaseHelper.pushNonResultQuery("CREATE TABLE IF NOT EXISTS `rssChannels`(`id` INTEGER PRIMARY KEY AUTOINCREMENT," +
-                " `title` TEXT NOT NULL," +
-                " `description` TEXT NOT NULL" +
-                " `link` TEXT NOT NULL);");
-        DatabaseHelper.pushNonResultQuery("CREATE TABLE IF NOT EXISTS `rssItems`(`id` INTEGER PRIMARY KEY AUTOINCREMENT," +
-                " `channelId` INTEGER NOT NULL DEFAULT '0'," +
-                " `title` TEXT NOT NULL," +
-                " `description` TEXT NOT NULL," +
-                " `link` TEXT NOT NULL" +
-                " `pubDate` TEXT NOT NULL);");
+    public static void createTables() {
+
+        pushNonResultQuery("DROP TABLE IF EXISTS " + CHANNELS_TABLE_NAME + END_OF_QUERY);
+        pushNonResultQuery("DROP TABLE IF EXISTS " + ITEMS_TABLE_NAME + END_OF_QUERY);
+
+
+        pushNonResultQuery("CREATE TABLE IF NOT EXISTS " +
+                CHANNELS_TABLE_NAME + " (" +
+                ID_COLUMN + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                TITLE_COLUMN + " TEXT NOT NULL, " +
+                DESCRIPTION_COLUMN + " TEXT NOT NULL, " +
+                LINK_COLUMN + " TEXT NOT NULL)" +
+                END_OF_QUERY);
+
+        pushNonResultQuery("CREATE TABLE IF NOT EXISTS " +
+                ITEMS_TABLE_NAME + " (" +
+                ID_COLUMN + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                CHANNEL_ID_COLUMN + " INTEGER NOT NULL DEFAULT '0', " +
+                TITLE_COLUMN + " TEXT NOT NULL, " +
+                DESCRIPTION_COLUMN + " TEXT NOT NULL, " +
+                LINK_COLUMN + " TEXT NOT NULL, " +
+                PUB_DATE_COLUMN + " TEXT NOT NULL)" +
+                END_OF_QUERY);
     }
 
     public static void closeDB() {
@@ -55,17 +84,17 @@ public class DatabaseHelper {
         }
     }
 
-    public static ArrayList<Channel> selectChannels()
-    {
+    public static ArrayList<Channel> selectAllChannels() {
+        ArrayList<Channel> result = new ArrayList<>();
         try {
-            Cursor query = database.rawQuery(currentContext.getString(R.string.selectChannelQuery), null);
-            if (!query.moveToFirst())
-            {
-                query.close();
-                return null;
-            }
 
-            ArrayList<Channel> result = new ArrayList<>();
+            Cursor query = database.rawQuery(SELECT_ALL_FROM + CHANNELS_TABLE_NAME + END_OF_QUERY,
+                    null);
+
+            if (!query.moveToFirst()) {
+                query.close();
+                return result;
+            }
 
             do {
                 Channel channel = new Channel();
@@ -78,22 +107,20 @@ public class DatabaseHelper {
             while (query.moveToNext());
 
             query.close();
-            return result;
 
         } catch (SQLException e) {
             Toast.makeText(currentContext, e.toString(), Toast.LENGTH_LONG).show();
-            return null;
         }
+        return result;
     }
 
-    public static ArrayList<Item> selectItems()
-    {
+    public static ArrayList<Item> selectAllItems() {
         try {
-            Cursor query = database.rawQuery("SELECT * FROM `rssItems`;", null);
-            if (!query.moveToFirst())
-            {
+            Cursor query = database.rawQuery(SELECT_ALL_FROM +
+                    ITEMS_TABLE_NAME + END_OF_QUERY, null);
+            if (!query.moveToFirst()) {
                 query.close();
-                return null;
+                return new ArrayList<>();
             }
 
             ArrayList<Item> result = new ArrayList<>();
@@ -119,22 +146,39 @@ public class DatabaseHelper {
         }
     }
 
-    public static void saveChannel(Channel channel)
-    {
-        pushNonResultQuery("INSERT INTO `rssChannels` (`title`, `description`, `link`) VALUES ('" +
-                channel.getTitle() + "', '" +
-                channel.getDescription() + "', '" +
-                channel.getLink() +"');");
+    @SuppressLint("ShowToast")
+    public static void insertChannel(Channel channel) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(TITLE_COLUMN, channel.getTitle());
+        contentValues.put(DESCRIPTION_COLUMN, channel.getDescription());
+        contentValues.put(LINK_COLUMN, channel.getLink());
+
+        long id = database.insert(CHANNELS_TABLE_NAME, null, contentValues);
+        if (id != -1)
+            channel.setId((int) id);
+        else {
+            Toast.makeText(currentContext, R.string.insertChannelError, Toast.LENGTH_LONG);
+            Log.w("DatabaseHelper", "Error while inserting channel occurred!");
+        }
     }
 
-    public static void saveItem(Item item)
-    {
-        pushNonResultQuery("INSERT INTO `rssChannels` (`channelId`, `title`, `description`, `link`) VALUES ('" +
-                item.getChannelId() + "', '" +
-                item.getTitle() + "', '" +
-                item.getDescription() + "', '" +
-                item.getLink() + "', '" +
-                item.getPubDate() +"');");
+    @SuppressLint("ShowToast")
+    public static void insertItem(Item item) {
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(CHANNEL_ID_COLUMN, item.getChannelId());
+        contentValues.put(TITLE_COLUMN, item.getTitle());
+        contentValues.put(DESCRIPTION_COLUMN, item.getDescription());
+        contentValues.put(LINK_COLUMN, item.getLink());
+        contentValues.put(PUB_DATE_COLUMN, item.getPubDate());
+
+        long id = database.insert(ITEMS_TABLE_NAME, null, contentValues);
+        if (id != -1)
+            item.setId((int) id);
+        else {
+            Toast.makeText(currentContext, R.string.insertItemError, Toast.LENGTH_LONG);
+            Log.w("DatabaseHelper", "Error while inserting channel occurred!");
+        }
     }
 
 }
