@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.maxim.rss_parser.activity.MainActivity">
+    <item
+        android:id="@+id/acceptButton"
+        android:icon="@drawable/ic_check_24dp"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom"
+        android:title="@string/accept" />
+</menu>

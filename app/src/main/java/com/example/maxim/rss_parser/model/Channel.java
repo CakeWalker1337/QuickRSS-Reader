@@ -13,6 +13,7 @@ import java.util.List;
 public class Channel {
 
     private int id;
+    private boolean validity = true;
 
     @Element(name = "title", required = false)
     private String title;
@@ -32,6 +33,10 @@ public class Channel {
 
     @Element(name = "language", required = false)
     private String language;
+
+    public boolean isValid(){return validity;}
+
+    public void setValidity(boolean newValidity){validity = newValidity;}
 
     public int getId() {
         return id;

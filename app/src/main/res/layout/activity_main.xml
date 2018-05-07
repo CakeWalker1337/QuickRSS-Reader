@@ -32,31 +32,35 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/fab_margin"
+            android:layout_marginBottom="28dp"
+            android:layout_marginEnd="16dp"
+            app:backgroundTint="@color/colorPrimary"
+            app:rippleColor="@color/colorPrimary"
+            app:srcCompat="@drawable/custom_plus" />
+
         <fragment
             android:id="@+id/bandFragment"
             class="com.example.maxim.rss_parser.view.BandFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:layout="@layout/fragment_band" />
+            tools:layout="@layout/fragment_view" />
 
         <fragment
             android:id="@+id/channelsFragment"
             class="com.example.maxim.rss_parser.view.ChannelsFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:layout="@layout/fragment_channels" />
+            tools:layout="@layout/fragment_view" />
 
     </FrameLayout>
 
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:layout_marginBottom="28dp"
-        android:layout_marginEnd="16dp"
-        app:srcCompat="@android:drawable/ic_menu_add" />
+
 
 </LinearLayout>

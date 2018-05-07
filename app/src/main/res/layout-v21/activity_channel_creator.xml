@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.maxim.rss_parser.activity.AddChannelActivity">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_margin="15dp"
+        android:id="@+id/inputChannelBox"
+        android:hint="@string/inputRSSString"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorTint"
+        android:inputType="text" />
+
+    <TextView
+        android:id="@+id/channelNameBox"
+        android:textStyle="bold"
+        android:layout_marginLeft="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="... или выберите готовый" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_margin="10dp"
+        android:background="@android:color/black" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/contentRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>

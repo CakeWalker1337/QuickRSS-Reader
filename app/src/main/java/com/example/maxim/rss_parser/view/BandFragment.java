@@ -1,8 +1,8 @@
 package com.example.maxim.rss_parser.view;
 
 import android.graphics.Point;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,7 +15,10 @@ import android.widget.Toast;
 
 import com.example.maxim.rss_parser.R;
 import com.example.maxim.rss_parser.data.App;
+import com.example.maxim.rss_parser.database.DatabaseHelper;
+import com.example.maxim.rss_parser.exceptions.NoConnectionException;
 import com.example.maxim.rss_parser.model.Article;
+import com.example.maxim.rss_parser.model.Channel;
 import com.example.maxim.rss_parser.model.Item;
 
 import java.net.UnknownHostException;
@@ -40,6 +43,7 @@ public class BandFragment extends Fragment {
     RecyclerView recyclerView;
     SwipeRefreshLayout swipeLayout;
     ProgressBar progressBar;
+    ArrayList<Channel> channels;
 
     public BandFragment() {
     }
@@ -48,7 +52,7 @@ public class BandFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.fragment_band, container, false);
+        View v = inflater.inflate(R.layout.fragment_view, container, false);
 
         items = new ArrayList<>();
 
@@ -61,20 +65,22 @@ public class BandFragment extends Fragment {
             }
         });
 
-        progressBar = v.findViewById(R.id.loadingBar);
+      //  progressBar = v.findViewById(R.id.loadingBar);
 
-        recyclerView = v.findViewById(R.id.recyclerBand);
+        recyclerView = v.findViewById(R.id.contentRecycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         Point size = new Point();
         getActivity().getWindowManager().getDefaultDisplay().getSize(size);
         recyclerView.setAdapter(new BandRecyclerAdapter(items, size.x));
 
-        progressBar.setVisibility(View.VISIBLE);
+       // progressBar.setVisibility(View.VISIBLE);
         updateArticles();
         Collections.sort(items, new Comparator<Item>() {
 
-            SimpleDateFormat formatter = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss ZZZ", Locale.ENGLISH);
-            SimpleDateFormat formatter2 = new SimpleDateFormat("E, dd MMM yyyy HH:mm zzz", Locale.ENGLISH);
+            SimpleDateFormat formatter = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss ZZZ",
+                    Locale.ENGLISH);
+            SimpleDateFormat formatter2 = new SimpleDateFormat("E, dd MMM yyyy HH:mm zzz",
+                    Locale.ENGLISH);
 
 
             @Override
@@ -100,42 +106,51 @@ public class BandFragment extends Fragment {
         });
         recyclerView.getAdapter().notifyDataSetChanged();
         swipeLayout.setRefreshing(false);
-        progressBar.setVisibility(View.INVISIBLE);
+     //   progressBar.setVisibility(View.INVISIBLE);
         return v;
-
     }
 
 
     public void updateArticles() {
         items.clear();
-        App.getApi().getData("http://www.lenta.ru/rss").enqueue(new Callback<Article>() {
-            @Override
-            public void onResponse(Call<Article> call, Response<Article> response) {
-                Article art = response.body();
-                if (art != null) {
+        channels = DatabaseHelper.selectAllChannels();
+        for (int i = 0; i < channels.size(); i++) {
+            final int index = i;
+            App.getApi().getData(channels.get(index).getLink()).enqueue(new Callback<Article>() {
+                @Override
+                public void onResponse(Call<Article> call, Response<Article> response) {
+                    Article art = response.body();
+                    if (art != null) {
 
-                    for (int i = 0; i < art.getChannel().getItemsSize(); i++) {
-                        art.getChannel().getItem(i).setChannel(art.getChannel());
+                        for (int i = 0; i < art.getChannel().getItemsSize(); i++) {
+                            art.getChannel().getItem(i).setChannel(art.getChannel());
+                        }
+
+                        for (int i = 0; i < art.getChannel().getItemsSize(); i++)
+                            items.add(art.getChannel().getItem(i));
+                    }
+                    if (index == channels.size() - 1) {
+                        swipeLayout.setRefreshing(false);
+                        recyclerView.getAdapter().notifyDataSetChanged();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Article> call, Throwable t) {
+                    t.printStackTrace();
+                    if (t instanceof UnknownHostException)
+                        Toast.makeText(getContext(), R.string.unknownHostMessage + call.request().url().toString(), Toast.LENGTH_LONG).show();
+                    if (t instanceof NoConnectionException)
+                        Toast.makeText(getContext(), R.string.connectionLostMessage, Toast.LENGTH_LONG).show();
+
+                    if (index == channels.size() - 1) {
+                        swipeLayout.setRefreshing(false);
+                        recyclerView.getAdapter().notifyDataSetChanged();
                     }
 
-                    for(int i = 0; i<art.getChannel().getItemsSize(); i++)
-                        items.add(art.getChannel().getItem(i));
                 }
-                recyclerView.getAdapter().notifyDataSetChanged();
-            }
-
-            @Override
-            public void onFailure(Call<Article> call, Throwable t) {
-                t.printStackTrace();
-                if (t instanceof UnknownHostException)
-                    Toast.makeText(getContext(), R.string.connectionLostMessage, Toast.LENGTH_LONG).show();
-                Log.w("FAILURE", call.request().url().toString());
-        //        ArrayList<Item> loadedItems = DatabaseHelper.selectItemsByChannelId();
-          //      items.addAll(loadedItems);
-                recyclerView.getAdapter().notifyDataSetChanged();
-                swipeLayout.setRefreshing(false);
-            }
-        });
+            });
+        }
 
     }
 

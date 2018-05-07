@@ -181,4 +181,8 @@ public class DatabaseHelper {
         }
     }
 
+    public static void deleteChannel(Channel channel)
+    {
+        database.delete(CHANNELS_TABLE_NAME, LINK_COLUMN + " = '" + channel.getLink() + "'", null);
+    }
 }

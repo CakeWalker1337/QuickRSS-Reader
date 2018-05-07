@@ -5,4 +5,10 @@
     <string name="linkBoxText">Источник:</string>
     <string name="insertItemError">Ошибка сохранения данных в базу данных!</string>
     <string name="insertChannelError">Ошибка сохранения данных в базу данных!</string>
+    <string name="unknownHostMessage">Невозможно подключиться к серверу</string>
+    <string name="inputRSSString">Введите ссылку на RSS-канал</string>
+    <string name="addChannelString">Добавить канал</string>
+    <string name="accept">Accept</string>
+    <string name="selectExistsString">... или выберите готовый</string>
+    <string name="setChannelLinkWarning">Ссылка не может быть пустой строкой!</string>
 </resources>
