@@ -16,12 +16,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    configurations {
-        all {
-            exclude module: 'httpclient'
-            exclude module: 'commons-logging'
-        }
-    }
+
 }
 
 dependencies {
@@ -35,7 +30,15 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     compile 'org.jetbrains:annotations-java5:15.0'
-    compile 'com.squareup.retrofit2:converter-simplexml:2.3.0'
+    compile ('com.squareup.retrofit2:converter-simplexml:2.3.0') {
+        exclude module: 'stax-api'
+
+    }
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
+}
+configurations {
+    all {
+        exclude group: 'xpp3', module: 'xpp3'
+    }
 }

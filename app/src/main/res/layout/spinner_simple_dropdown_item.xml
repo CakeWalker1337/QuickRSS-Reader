@@ -1,0 +1,18 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingTop="10dp"
+    android:background="#FFFFFF"
+    android:paddingBottom="10dp"
+    android:paddingStart="20dp"
+    android:paddingEnd="40dp">
+
+    <TextView
+        android:id="@+id/itemView"
+        style="@style/spinnerDropDownItemStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="marquee"
+        android:singleLine="true" />
+</LinearLayout>

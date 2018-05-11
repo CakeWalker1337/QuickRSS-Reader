@@ -22,6 +22,7 @@ import com.example.maxim.rss_parser.model.Article;
 import com.example.maxim.rss_parser.model.Channel;
 import com.example.maxim.rss_parser.view.BandFragment;
 import com.example.maxim.rss_parser.view.ChannelsFragment;
+import com.example.maxim.rss_parser.view.CustomSpinnerAdapter;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -71,8 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
         //установка спиннера, адаптера к нему а также листенера выбора элемента
         Spinner spinner = toolbar.findViewById(R.id.toolbarSpinner);
-        SpinnerAdapter spinnerAdapter = new ArrayAdapter<String>(this, R.layout.simple_spinner_item_view, toolbarSpinnerItemNames);
-        ((ArrayAdapter<String>) spinnerAdapter).setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        CustomSpinnerAdapter spinnerAdapter = new CustomSpinnerAdapter(getApplicationContext());
         spinner.setAdapter(spinnerAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
