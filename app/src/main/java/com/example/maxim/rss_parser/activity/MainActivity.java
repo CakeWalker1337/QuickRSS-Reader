@@ -1,6 +1,8 @@
 package com.example.maxim.rss_parser.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
@@ -72,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
         //установка спиннера, адаптера к нему а также листенера выбора элемента
         Spinner spinner = toolbar.findViewById(R.id.toolbarSpinner);
+        spinner.getBackground().setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
         CustomSpinnerAdapter spinnerAdapter = new CustomSpinnerAdapter(getApplicationContext());
         spinner.setAdapter(spinnerAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

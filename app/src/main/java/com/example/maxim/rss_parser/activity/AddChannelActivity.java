@@ -59,6 +59,7 @@ public class AddChannelActivity extends AppCompatActivity implements OnChooseCha
         actionBar.setTitle(R.string.addChannelString);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
+
         //Массив для ссылок, которые будут проходить проверку на валидность
         recommendedChannelsLinks = new ArrayList<>();
 
