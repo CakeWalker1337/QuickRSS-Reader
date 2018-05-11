@@ -8,22 +8,25 @@ import org.simpleframework.xml.Text;
 
 import java.util.List;
 
-
+/**
+ * Класс, содержащий информацию о канале.
+ * Внутри класса расставлены аннотации для парсинга по XML
+ */
 @Root(name = "channel", strict = false)
 public class Channel {
 
-    private int id;
+    private int id = 0;
     private boolean validity = true;
 
     @Element(name = "title", required = false)
-    private String title;
+    private String title = "";
 
     @Element(name = "description", required = false)
-    private String description;
+    private String description = "";
 
     @Path("link")
     @Text(required = false)
-    private String link;
+    private String link = "";
 
     @ElementList(name = "item", inline = true)
     private List<Item> items;
@@ -32,11 +35,15 @@ public class Channel {
     private Image image;
 
     @Element(name = "language", required = false)
-    private String language;
+    private String language = "";
 
-    public boolean isValid(){return validity;}
+    public boolean isValid() {
+        return validity;
+    }
 
-    public void setValidity(boolean newValidity){validity = newValidity;}
+    public void setValidity(boolean newValidity) {
+        validity = newValidity;
+    }
 
     public int getId() {
         return id;
@@ -82,13 +89,13 @@ public class Channel {
         items.clear();
     }
 
-    public int getItemsSize() { return items.size(); }
+    public int getItemsSize() {
+        return items.size();
+    }
 
-    public void refreshData(Article newArticle)
-    {
+    public void refreshData(Article newArticle) {
         clearItems();
-        for(int newItemIndex = 0; newItemIndex<newArticle.getChannel().getItemsSize(); newItemIndex++)
-        {
+        for (int newItemIndex = 0; newItemIndex < newArticle.getChannel().getItemsSize(); newItemIndex++) {
             addItem(newArticle.getChannel().getItem(newItemIndex));
         }
     }

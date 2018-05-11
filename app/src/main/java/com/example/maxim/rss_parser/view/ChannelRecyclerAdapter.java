@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,22 +20,42 @@ import com.example.maxim.rss_parser.model.Channel;
 
 import java.util.ArrayList;
 
+/**
+ * Класс-адаптер для списка существующих и рекомендуемых каналов
+ */
 public class ChannelRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private final long FADE_DURATION = 300;
-    OnChooseChannelListener chooseChannelListener;
-    private ArrayList<Channel> channels;
-    private AdapterMode currentAdapterMode;
+    private final long FADE_DURATION = 300; //Скорость анимации появления каналов в ресайклере
+    private OnChooseChannelListener chooseChannelListener; //Листенер для отправки данных
+    // во второе активити
+    private ArrayList<Channel> channels; //Список каналов
+    private AdapterMode currentAdapterMode; //Режим использования адаптера (для рекомендуемых
+    // каналов или для существующих каналов)
 
+    /**
+     * Конструктор класса, получающий список каналов для отображения и режим отображения
+     *
+     * @param channels    - список каналов для отображения
+     * @param adapterMode - режим отображения (рекомендуемые или существующие каналы)
+     */
     public ChannelRecyclerAdapter(ArrayList<Channel> channels, AdapterMode adapterMode) {
         currentAdapterMode = adapterMode;
         this.channels = channels;
     }
 
+    /**
+     * Метод присваивающий листенер для хранения в классе. Листенер оповещает класс
+     * активити о выборе рекомендуемого канала
+     *
+     * @param listener - листенер для установки
+     */
     public void setChooseChannelListener(OnChooseChannelListener listener) {
         chooseChannelListener = listener;
     }
 
+    /**
+     * Метод создания "карточки" с контентом, который будет отображаться в ресайклере
+     */
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.channel_card, parent, false);
@@ -44,6 +63,9 @@ public class ChannelRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         return vh;
     }
 
+    /**
+     * Метод, привязывающий данные к карточке канала
+     */
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (channels == null) return;
@@ -53,15 +75,16 @@ public class ChannelRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         vHolder.channelNameBox.setText(channel.getTitle());
         vHolder.descBox.setText(channel.getDescription());
         vHolder.linkBox.setText(Html.fromHtml("Ссылка: <a href = \"" + channel.getLink() + "\"> " + channel.getLink() + "  </a>"));
-        Log.w("REFRESH_CHAN", channel.getLink());
+        //Если канал невалидный, меняем цвет на красный
         if (!channel.isValid()) {
-            int color = Color.parseColor("#F07E7E");
+            int color = Color.parseColor("#F09E9E");
             vHolder.layoutView.setBackgroundColor(color);
         } else {
             vHolder.layoutView.setBackgroundColor(Color.WHITE);
         }
 
-
+        //Если режим рекомендуемых каналов, то навешиваем эвенты клика на все элементы карточки
+        // и убираем кнопку удаления
         if (currentAdapterMode == AdapterMode.RECOMMENDED_CHANNELS_LIST) {
 
             CustomClickListener listener = new CustomClickListener(position);
@@ -71,37 +94,45 @@ public class ChannelRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             vHolder.descBox.setOnClickListener(listener);
             vHolder.linkBox.setOnClickListener(listener);
         } else {
-            final int pos = position;
-            vHolder.deleteButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    DatabaseHelper.deleteChannel(channels.get(pos));
-                    channels.remove(pos);
-                    notifyItemRemoved(pos);
-                }
-            });
-
+            //Если режим существующих каналов, навешиваем обычный листенер клика на кнопку удаления
+            vHolder.deleteButton.setOnClickListener(new DeleteButtonClickListener(channel));
         }
+        //Воспроизводим анимацию появления вью в ленте
         setFadeAnimation(holder.itemView);
     }
 
+    /**
+     * Метод получения размера списка для отображения (используется ресайклером неявно)
+     */
     @Override
     public int getItemCount() {
         if (channels == null) return 0;
         return channels.size();
     }
 
+    /**
+     * Метод привязки к ресайклеру (стандартный)
+     */
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
     }
 
+    /**
+     * Метод, применяющий анимацию появления карточки с каналом
+     *
+     * @param vh - вью карточки с каналом
+     */
     private void setFadeAnimation(View vh) {
+        //Задаем анимацию изменения прозрачности объекта, скорость анимации и запускаем
         AlphaAnimation alphaAnimation = new AlphaAnimation(0f, 1f);
         alphaAnimation.setDuration(FADE_DURATION);
         vh.startAnimation(alphaAnimation);
     }
 
+    /**
+     * Класс представления данных в виде карточки
+     */
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView channelNameBox;
         public TextView descBox;
@@ -115,11 +146,16 @@ public class ChannelRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             descBox = itemView.findViewById(R.id.descBox);
             deleteButton = itemView.findViewById(R.id.deleteButton);
             linkBox = itemView.findViewById(R.id.linkBox);
+            //Устанавливаем переходы по ссылкам внутри текствью
             linkBox.setMovementMethod(LinkMovementMethod.getInstance());
             layoutView = itemView.findViewById(R.id.layoutView);
         }
     }
 
+    /**
+     * Класс-листенер отвечающий за передачу позиции выбранного канала из рекомендуемых в
+     * активити
+     */
     public class CustomClickListener implements View.OnClickListener {
         int position;
 
@@ -133,5 +169,27 @@ public class ChannelRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         }
     }
 
+    /**
+     * Класс-листенер отвечающий за удаление карточки из ленты
+     */
+    public class DeleteButtonClickListener implements View.OnClickListener {
+        private Channel channel;
+
+        public DeleteButtonClickListener(Channel channel) {
+            this.channel = channel;
+        }
+
+        @Override
+        public void onClick(View view) {
+            //Удаляем канал из БД
+            DatabaseHelper.deleteChannel(channel);
+            //Получаем позицию канала в массиве и удаляем его
+            int pos = channels.indexOf(channel);
+            channels.remove(pos);
+            //Обновляем ресайклер на удаленной позиции, чтобы было красиво
+            notifyItemRemoved(pos);
+
+        }
+    }
 
 }

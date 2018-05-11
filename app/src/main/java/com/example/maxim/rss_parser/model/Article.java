@@ -4,6 +4,10 @@ import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
+/**
+ * Класс, содержащий информацию о версии запроса к каналу.
+ * Внутри класса расставлены аннотации для парсинга по XML
+ */
 @Root(name = "rss", strict = false)
 public class Article {
 
@@ -14,30 +18,25 @@ public class Article {
     private String version;
 
 
-    public Channel getChannel ()
-    {
+    public Channel getChannel() {
         return channel;
     }
 
-    public void setChannel (Channel channel)
-    {
+    public void setChannel(Channel channel) {
         this.channel = channel;
     }
 
-    public String getVersion ()
-    {
+    public String getVersion() {
         return version;
     }
 
-    public void setVersion (String version)
-    {
+    public void setVersion(String version) {
         this.version = version;
     }
 
     @Override
-    public String toString()
-    {
-        return "ClassPojo [channel = "+channel+"]";
+    public String toString() {
+        return "ClassPojo [channel = " + channel + "]";
     }
 
 }

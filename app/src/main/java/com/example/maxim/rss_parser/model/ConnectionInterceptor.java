@@ -11,7 +11,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /**
- * Created by Maxim on 04.05.2018.
+ * Класс-перехватчик для внедрения экспешна об отсутствии интернета в ретрофит
  */
 
 public class ConnectionInterceptor implements Interceptor {
@@ -27,7 +27,7 @@ public class ConnectionInterceptor implements Interceptor {
         if (!NetworkChecker.isOnline(mContext)) {
             throw new NoConnectionException();
         }
-
+        // добавляем интерсептор в цепь вызовов билдера ретро
         Request.Builder builder = chain.request().newBuilder();
         return chain.proceed(builder.build());
     }

@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,18 +18,21 @@ import com.example.maxim.rss_parser.model.AdapterMode;
 import com.example.maxim.rss_parser.model.Article;
 import com.example.maxim.rss_parser.model.Channel;
 
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * Класс-фрагмент для отображения списка каналов
+ */
 public class ChannelsFragment extends Fragment {
 
     RecyclerView recyclerView;
-    SwipeRefreshLayout swipeLayout;
-    private ArrayList<Channel> channels;
+    SwipeRefreshLayout swipeLayout;//вью для обновления ресайклера
+    int loadedChannelsCount; //Счетчик проверенных каналов
+    private ArrayList<Channel> channels;// список каналов
 
     public ChannelsFragment() {
     }
@@ -41,11 +43,12 @@ public class ChannelsFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_view, container, false);
 
-        recyclerView = v.findViewById(R.id.contentRecycler);
+        //Идентифицируем необходимые вью
+
         channels = new ArrayList<>();
 
+        //Идентифицируем вью для обновления свайпом и задаем клик листенер
         swipeLayout = v.findViewById(R.id.swipeLayout);
-
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -53,23 +56,36 @@ public class ChannelsFragment extends Fragment {
             }
         });
 
+        //Идентифицируем ресайклер и устанавливаем ему менеджер и адаптер
+        recyclerView = v.findViewById(R.id.contentRecycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
+        //Фиксируем в адаптере мод для отображения зарегистрированных каналов
         recyclerView.setAdapter(new ChannelRecyclerAdapter(channels, AdapterMode.CURRENT_CHANNELS_LIST));
 
+        //Обновляем список каналов
         refreshChannelsInfo();
 
         return v;
     }
 
 
+    /**
+     * Метод обновления списка каналов
+     */
     public void refreshChannelsInfo() {
+        //Очищаем ресайклер и получаем каналы из БД
+        swipeLayout.setRefreshing(true);
         channels.clear();
+        loadedChannelsCount = 0;
         channels.addAll(DatabaseHelper.selectAllChannels());
+        //Если каналов в БД нет, то уведомляем пользователя и прерываем обновление
         if (channels.size() == 0) {
+            Toast.makeText(getContext(), R.string.noChannelsError,
+                    Toast.LENGTH_LONG).show();
             swipeLayout.setRefreshing(false);
             return;
         }
+        //Проверяем каналы на валидность
         for (int i = 0; i < channels.size(); i++) {
 
             final int index = i;
@@ -78,12 +94,15 @@ public class ChannelsFragment extends Fragment {
                 public void onResponse(Call<Article> call, Response<Article> response) {
                     Article art = response.body();
                     if (art != null) {
+                        //Если канал валиден, обновляем канал, полученный из БД
                         Channel channel = channels.get(index);
                         channel.setTitle(art.getChannel().getTitle());
                         channel.setDescription(art.getChannel().getDescription());
                         channel.setValidity(true);
                     }
-                    if (index == channels.size() - 1) {
+                    loadedChannelsCount++;
+                    //Если канал последний, отображаем изменения в ресайклере
+                    if (loadedChannelsCount == channels.size()) {
                         swipeLayout.setRefreshing(false);
                         recyclerView.getAdapter().notifyDataSetChanged();
                     }
@@ -92,16 +111,14 @@ public class ChannelsFragment extends Fragment {
                 @Override
                 public void onFailure(Call<Article> call, Throwable t) {
                     t.printStackTrace();
-                    if (t instanceof UnknownHostException)
-                        Toast.makeText(getContext(), R.string.unknownHostMessage + call.request().url().toString(), Toast.LENGTH_LONG).show();
-                    if (t instanceof NoConnectionException)
-                        Toast.makeText(getContext(), R.string.connectionLostMessage, Toast.LENGTH_LONG).show();
-
-                    //        ArrayList<Item> loadedItems = DatabaseHelper.selectItemsByChannelId();
-                    //      items.addAll(loadedItems);
-                    Log.w("CHECK", channels.get(index).getLink());
+                    //В случае ошибки делаем канал инвалидным (он будет подсвечиваться красным)
                     channels.get(index).setValidity(false);
-                    if (index == channels.size() - 1) {
+                    loadedChannelsCount++;
+                    if (loadedChannelsCount == channels.size()) {
+                        //Если канал был последним, фиксируем изменения в ресайклере
+                        if (t instanceof NoConnectionException)
+                            Toast.makeText(getContext(), R.string.connectionLostMessage,
+                                    Toast.LENGTH_LONG).show();
                         swipeLayout.setRefreshing(false);
                         recyclerView.getAdapter().notifyDataSetChanged();
                     }

@@ -1,39 +1,40 @@
 package com.example.maxim.rss_parser.model;
 
 import org.simpleframework.xml.Element;
-import org.simpleframework.xml.Path;
 import org.simpleframework.xml.Root;
 
+/**
+ * Класс, содержащий информацию о статье.
+ * Внутри класса расставлены аннотации для парсинга по XML
+ */
 @Root(name = "item", strict = false)
 public class Item {
     private Channel channel;
 
-    private int id;
-
-    private int channelId;
+    private int id = 0;
 
     @Element(name = "guid", required = false)
-    private String guid;
+    private String guid = "";
 
     @Element(name = "pubDate", required = false)
-    private String pubDate;
+    private String pubDate = "";
 
     @Element(name = "title", required = false)
-    private String title;
+    private String title = "";
 
     @Element(name = "category", required = false)
-    private String category;
+    private String category = "";
 
     @Element(name = "enclosure", required = false)
     private Enclosure enclosure;
 
     @Element(name = "description", required = false)
-    private String description;
+    private String description = "";
 
     @Element(name = "link", required = false)
-    private String link;
+    private String link = "";
 
-    public int setId() {
+    public int getId() {
         return id;
     }
 
@@ -42,11 +43,11 @@ public class Item {
     }
 
     public int getChannelId() {
-        return channelId;
+        return channel.getId();
     }
 
-    public void setChannelId(int channelId) {
-        this.channelId = channelId;
+    public void setChannelId(int id) {
+        channel.setId(id);
     }
 
     public Channel getChannel() {

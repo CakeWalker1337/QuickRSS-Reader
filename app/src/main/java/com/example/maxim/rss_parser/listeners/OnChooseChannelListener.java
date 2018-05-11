@@ -1,9 +1,9 @@
 package com.example.maxim.rss_parser.listeners;
 
 /**
- * Created by Maxim on 06.05.2018.
+ * Интерфейс, использующийся для передачи выбранной позиции канала
+ * из адаптера ресайклера в активити
  */
-
 public interface OnChooseChannelListener {
     void onChooseChannel(int position);
 }

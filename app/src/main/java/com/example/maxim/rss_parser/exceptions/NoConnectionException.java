@@ -3,9 +3,8 @@ package com.example.maxim.rss_parser.exceptions;
 import java.io.IOException;
 
 /**
- * Created by Maxim on 04.05.2018.
+ * Класс, описывающий эксепшн отсутствия интернета
  */
-
 public class NoConnectionException extends IOException {
 
     @Override
