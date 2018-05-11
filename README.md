@@ -26,7 +26,6 @@ NASA Image of the Day, политические каналы (например, 
 
 ![Band](https://raw.github.com/CakeWalker1337/RSS-Parser/master/github/screenshots/1.jpg)
 ![Channel list](https://raw.github.com/CakeWalker1337/RSS-Parser/master/github/screenshots/2.jpg)
-
 ![Add channel](https://raw.github.com/CakeWalker1337/RSS-Parser/master/github/screenshots/3.jpg)
 
 
