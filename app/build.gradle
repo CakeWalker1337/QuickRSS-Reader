@@ -1,9 +1,17 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'key0'
+            keyPassword 'rsskey1337'
+            storeFile file('C:/Users/Maxim/AndroidStudioProjects/RSS_Parser/rsskey.jks')
+            storePassword 'rsskey1337'
+        }
+    }
     compileSdkVersion 26
     defaultConfig {
-        applicationId "com.example.maxim.rss_parser"
+        applicationId "com.tenxgames.maxim.rss_parser"
         minSdkVersion 19
         targetSdkVersion 26
         versionCode 1
@@ -14,13 +22,17 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
+        }
+        debug {
+            signingConfig signingConfigs.config
         }
     }
-
+    buildToolsVersion '26.0.2'
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     //noinspection GradleCompatible
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
@@ -30,7 +42,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     compile 'org.jetbrains:annotations-java5:15.0'
-    compile ('com.squareup.retrofit2:converter-simplexml:2.3.0') {
+    compile('com.squareup.retrofit2:converter-simplexml:2.3.0') {
         exclude module: 'stax-api'
 
     }

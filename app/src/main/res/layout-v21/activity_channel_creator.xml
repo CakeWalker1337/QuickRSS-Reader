@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.maxim.rss_parser.activity.AddChannelActivity">
+    tools:context="com.tenxgames.maxim.rss_parser.activity.AddChannelActivity">
 
     <EditText
         android:layout_width="match_parent"

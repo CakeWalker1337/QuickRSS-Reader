@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.maxim.rss_parser.activity.MainActivity">
+    tools:context="com.tenxgames.maxim.rss_parser.activity.MainActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -48,14 +48,14 @@
 
         <fragment
             android:id="@+id/channelsFragment"
-            class="com.example.maxim.rss_parser.view.ChannelsFragment"
+            class="com.tenxgames.maxim.rss_parser.view.ChannelsFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:layout="@layout/fragment_view" />
 
         <fragment
             android:id="@+id/bandFragment"
-            class="com.example.maxim.rss_parser.view.BandFragment"
+            class="com.tenxgames.maxim.rss_parser.view.BandFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:layout="@layout/fragment_view" />
