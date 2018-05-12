@@ -1,6 +1,7 @@
 package com.tenxgames.maxim.rss_parser.view;
 
 import android.graphics.Color;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -73,7 +74,11 @@ public class ChannelRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         ViewHolder vHolder = (ViewHolder) holder;
         Channel channel = channels.get(position);
         vHolder.channelNameBox.setText(channel.getTitle());
-        vHolder.descBox.setText(channel.getDescription());
+        if (Build.VERSION.SDK_INT >= 24)
+            vHolder.descBox.setText(Html.fromHtml(channel.getDescription() , Html.FROM_HTML_MODE_LEGACY));
+        else
+            vHolder.descBox.setText(Html.fromHtml(channel.getDescription()));
+
         vHolder.linkBox.setText(Html.fromHtml("Ссылка: <a href = \"" + channel.getLink() + "\"> " + channel.getLink() + "  </a>"));
         //Если канал невалидный, меняем цвет на красный
         if (!channel.isValid()) {

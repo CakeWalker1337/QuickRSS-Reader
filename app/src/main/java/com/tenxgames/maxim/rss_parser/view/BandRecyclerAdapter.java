@@ -1,5 +1,6 @@
 package com.tenxgames.maxim.rss_parser.view;
 
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -58,7 +59,10 @@ public class BandRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         Item item = items.get(position);
         vHolder.channelNameBox.setText(item.getChannel().getTitle());
         vHolder.titleBox.setText(item.getTitle());
-        vHolder.contentBox.setText(item.getDescription());
+        if (Build.VERSION.SDK_INT >= 24)
+            vHolder.contentBox.setText(Html.fromHtml(item.getDescription() , Html.FROM_HTML_MODE_LEGACY));
+        else
+            vHolder.contentBox.setText(Html.fromHtml(item.getDescription()));
         //Задаем отображение ссылок
         vHolder.linkBox.setText(Html.fromHtml("Источник: <a href = \"" + item.getLink() + "\"> " + item.getLink() + "  </a>"));
         vHolder.dateBox.setText(item.getPubDate());
